@@ -1,0 +1,126 @@
+//Code to make a car assist using 2 sensors. Multiple sensors can be added to the same code by making little modifications.
+//lr = red light 
+//lg = green light 
+//usXe= Ultra sound sensor echo pin
+//usXt= Ultrasound sensor trig pin
+const int us1t = 12;
+const int us1e = 13;
+const int lr1 = 11;
+const int lr2 = 4;
+const int lr3 = 30;
+const int us2t = 24;
+const int us2e = 25;
+const int us3t = 23;
+const int us3e = 22;
+const int ledg = 5;
+const int ledr = 6;
+const int lg1 = 9;
+const int lg2 = 10;
+const int lg3 = 31;
+int x = 15;
+void setup() {
+  pinMode(us1t, OUTPUT); //trig
+  pinMode(us1e, INPUT);//echo
+  pinMode(lr1, OUTPUT);
+  pinMode(us2t, OUTPUT); //trig
+  pinMode(us2e, INPUT);//echo
+  pinMode(lr2, OUTPUT);
+  pinMode(ledg, OUTPUT);
+  pinMode(ledr, OUTPUT);
+   pinMode(lg1, OUTPUT);
+  pinMode(lg2, OUTPUT);
+  Serial.begin(9600);
+
+}
+void loop() {
+
+  long duration1, distance1, duration2, distance2, duration3, distance3;
+  digitalWrite(us1t, LOW);
+  delayMicroseconds(2);
+  digitalWrite(us1t, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(us1t, LOW);
+  duration1 = pulseIn(us1e, HIGH);
+  
+
+  //2nd Sensor
+  digitalWrite(us2t, LOW);
+  delayMicroseconds(2);
+  digitalWrite(us2t, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(us2t, LOW);
+  duration2 = pulseIn(us2e, HIGH);
+
+  //Sensor 3
+  digitalWrite(us3t, LOW);
+  delayMicroseconds(2);
+  digitalWrite(us3t, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(us3t, LOW);
+  duration3 = pulseIn(us3e, HIGH);
+  distance2 = (duration2 / 2) / 54;
+  distance1 = (duration1 / 2) / 54;
+  distance3 = (duration3 / 2) / 54;
+
+  if (distance1 <= x && distance2 <= x && distance3 <= x)
+  {
+    digitalWrite(lr1, HIGH);
+    digitalWrite(lr2, HIGH);
+    digitalWrite(lr3, HIGH);
+    digitalWrite(ledg, LOW);
+    digitalWrite(ledr, HIGH);
+    digitalWrite(lg2, LOW);
+    digitalWrite(lg1, LOW);
+    digitalWrite(lg3, LOW);
+    delay(500);
+    Serial.print("Both Sensors \t");
+    Serial.print(distance1);
+    Serial.print("\t");
+    Serial.println(distance2);
+    Serial.print("\t");
+    Serial.println(distance2);
+  }
+  else if (distance1 <= x)
+  {
+    digitalWrite(lr1, HIGH);
+    digitalWrite(ledg, LOW);
+    digitalWrite(ledr, HIGH);
+    digitalWrite(lg2, HIGH);
+    digitalWrite(lg1, LOW);
+    digitalWrite(lr2, LOW);
+    delay(500);
+    Serial.print("1st Sensor \t");
+    Serial.println(distance1);
+  }
+  else if (distance2 <= x)
+  {
+    second();
+    Serial.println(distance2);
+  }
+
+  else
+  {
+    digitalWrite(lr1, LOW);
+    digitalWrite(lr2, LOW);
+    digitalWrite(ledg, HIGH);
+    digitalWrite(ledr, LOW);
+    digitalWrite(lg2, HIGH);
+    digitalWrite(lg1, HIGH);
+    delay(50);
+    Serial.println("NO Problem");
+  }
+  delay(50);
+}
+
+void second()
+{
+  digitalWrite(lr2, HIGH);
+    digitalWrite(ledg, LOW);
+    digitalWrite(ledr, HIGH);
+    digitalWrite(lg2, LOW);
+    digitalWrite(lg1, HIGH);
+    digitalWrite(lr1, LOW);
+    delay(500);
+    Serial.print("2nd Sensor \t");
+    
+}
